@@ -23,12 +23,12 @@ export default function Login() {
                 <p className="text-center text-3xl">Bem-vindo</p>
                 <form className="flex flex-col pt-3 md:pt-8" onSubmit={handleLogin}>
                     <div className="flex flex-col pt-4">
-                        <label for="email" className="text-lg">Usuário</label>
+                        <label htmlFor="email" className="text-lg">Usuário</label>
                         <input type="email" id="email" placeholder="email@email.com" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"/>
                     </div>
     
                     <div className="flex flex-col pt-4">
-                        <label for="password" className="text-lg">Senha</label>
+                        <label htmlFor="password" className="text-lg">Senha</label>
                         <input type="password" id="password" placeholder="Password" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mt-1 leading-tight focus:outline-none focus:shadow-outline"/>
                     </div>
         

@@ -1,10 +1,24 @@
 import Link from 'next/link';
 import {useState} from "react";
+import { useForm } from 'react-hook-form';
 import { Header } from "../../components/Header";
 import { Modal } from '../../components/Modal';
 
 export default function Pedidos (){
     const [showModal, setShowModal] = useState(false);
+    const [pedidos, setPedidos] = useState({});
+    const { register, handleSubmit } = useForm();
+
+    useEffect(()=>{
+        api.get('/pedidos/1').then(function(response){
+            setPedidos(response.data)
+        })
+    })
+
+    async function handlePedido(data){
+        console.log(data)
+        //await api.post('/produtos', data)
+    }
     return(
         <div className="flex flex-col h-screen">
             <Header/>
@@ -29,127 +43,33 @@ export default function Pedidos (){
                             </tr>
                             </thead>
                             <tbody className="bg-white">
-                            <tr className="text-gray-700">
-                                <td className="px-4 py-3 border">
-                                <div className="flex items-center justify-center text-sm">
-                                    <div>
-                                    <p className="text-black">1</p>
-                                    </div>
-                                </div>
-                                </td>
-                                <td className="px-4 py-3 text-ms border">
-                                    <ul>
-                                        <li><Link href="/produto-x"><a className="mr-5 hover:text-gray-900">Produto A (1)</a></Link></li>
-                                        <li><Link href="/produto-x"><a className="mr-5 hover:text-gray-900">Produto B (8)</a></Link></li>
-                                        <li><Link href="/produto-x"><a className="mr-5 hover:text-gray-900">Produto D (3)</a></Link></li>
-                                    </ul>
-                                </td>
-                                <td className="px-4 py-3 text-xs  border">
-                                <span className="px-2 py-1 leading-tight text-green-700 rounded-sm"> R$350,00 </span>
-                                </td>
-                                <td className="px-4 py-3 text-sm border">Bruno</td>
-                                <td className="px-4 py-3 text-sm border">Rua a, número 00, SP</td>
-                                <td>
-                                <span className="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-sm"> Aguardando Pagamento </span>
-                                </td>
-                            </tr>
-                            <tr className="text-gray-700">
-                                <td className="px-4 py-3 border">
-                                <div className="flex items-center justify-center text-sm">
-                                    <div>
-                                    <p className="text-black">2</p>
-                                    </div>
-                                </div>
-                                </td>
-                                <td className="px-4 py-3 text-ms border">
-                                    <ul>
-                                        <li><Link href="/produto-x"><a className="mr-5 hover:text-gray-900">Produto A (11)</a></Link></li>
-                                        <li><Link href="/produto-x"><a className="mr-5 hover:text-gray-900">Produto AB (1)</a></Link></li>
-                                        <li><Link href="/produto-x"><a className="mr-5 hover:text-gray-900">Produto DEF (5)</a></Link></li>
-                                    </ul>
-                                </td>
-                                <td className="px-4 py-3 text-xs  border">
-                                <span className="px-2 py-1 leading-tight text-green-700 rounded-sm"> R$799,99 </span>
-                                </td>
-                                <td className="px-4 py-3 text-sm border">Esther</td>
-                                <td className="px-4 py-3 text-sm border">Rua fghi, número 000000, SP</td>
-                                <td>
-                                <span className="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-sm"> Aguardando Pagamento </span>
-                                </td>
-                            </tr>
-                            <tr className="text-gray-700">
-                                <td className="px-4 py-3 border">
-                                <div className="flex items-center justify-center text-sm">
-                                    <div>
-                                    <p className="text-black">3</p>
-                                    </div>
-                                </div>
-                                </td>
-                                <td className="px-4 py-3 text-ms border">
-                                    <ul>
-                                        <li><Link href="/produto-x"><a className="mr-5 hover:text-gray-900">Produto N (1)</a></Link></li>
-                                        <li><Link href="/produto-x"><a className="mr-5 hover:text-gray-900">Produto QRS (18)</a></Link></li>
-                                        <li><Link href="/produto-x"><a className="mr-5 hover:text-gray-900">Produto WXY (3)</a></Link></li>
-                                    </ul>
-                                </td>
-                                <td className="px-4 py-3 text-xs  border">
-                                <span className="px-2 py-1 leading-tight text-green-700 rounded-sm"> R$556,00 </span>
-                                </td>
-                                <td className="px-4 py-3 text-sm border">Henrique</td>
-                                <td className="px-4 py-3 text-sm border">Rua abxy, número 000, SP</td>
-                                <td>
-                                <span className="px-2 py-1 font-semibold leading-tight text-white-100 bg-red-400 rounded-sm"> Cancelado </span>
-                                </td>
-                            </tr>
-                            <tr className="text-gray-700">
-                                <td className="px-4 py-3 border">
-                                <div className="flex items-center justify-center text-sm">
-                                    <div>
-                                    <p className="text-black">4</p>
-                                    </div>
-                                </div>
-                                </td>
-                                <td className="px-4 py-3 text-ms border">
-                                    <ul>
-                                        <li><Link href="/produto-x"><a className="mr-5 hover:text-gray-900">Produto JB (3)</a></Link></li>
-                                        <li><Link href="/produto-x"><a className="mr-5 hover:text-gray-900">Produto HH (2)</a></Link></li>
-                                        <li><Link href="/produto-x"><a className="mr-5 hover:text-gray-900">Produto XYZ (2)</a></Link></li>
-                                    </ul>
-                                </td>
-                                <td className="px-4 py-3 text-xs  border">
-                                <span className="px-2 py-1 leading-tight text-green-700 rounded-sm"> R$159,80 </span>
-                                </td>
-                                <td className="px-4 py-3 text-sm border">PH</td>
-                                <td className="px-4 py-3 text-sm border">Rua abcd, número 000, SP</td>
-                                <td>
-                                <span className="px-2 py-1 font-semibold leading-tight text-gray-700 bg-yellow-100 rounded-sm"> Enviado </span>
-                                </td>
-                            </tr>
-                            <tr className="text-gray-700">
-                                <td className="px-4 py-3 border">
-                                <div className="flex items-center justify-center text-sm">
-                                    <div>
-                                    <p className="text-black">5</p>
-                                    </div>
-                                </div>
-                                </td>
-                                <td className="px-4 py-3 text-ms border">
-                                    <ul>
-                                        <li><Link href="/produto-x"><a className="mr-5 hover:text-gray-900">Produto C (3)</a></Link></li>
-                                        <li><Link href="/produto-x"><a className="mr-5 hover:text-gray-900">Produto D (5)</a></Link></li>
-                                        <li><Link href="/produto-x"><a className="mr-5 hover:text-gray-900">Produto J (2)</a></Link></li>
-                                        <li><Link href="/produto-x"><a className="mr-5 hover:text-gray-900">Produto XY (15)</a></Link></li>
-                                    </ul>
-                                </td>
-                                <td className="px-4 py-3 text-xs  border">
-                                <span className="px-2 py-1 leading-tight text-green-700 rounded-sm"> R$1250,00 </span>
-                                </td>
-                                <td className="px-4 py-3 text-sm border">Marcos</td>
-                                <td className="px-4 py-3 text-sm border">Rua XX, número 000, SP</td>
-                                <td>
-                                <span className="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-sm"> Entregue </span>
-                                </td>
-                            </tr>
+                            { Object.entries(pedidos).map((pedido,index) => {
+                                return (
+                                    <tr className="text-gray-700" key={index}>
+                                        <td className="px-4 py-3 border">
+                                        <div className="flex items-center justify-center text-sm">
+                                            <div>
+                                            <p className="text-black">{index + 1}</p>
+                                            </div>
+                                        </div>
+                                        </td>
+                                        <td className="px-4 py-3 text-ms border">
+                                            <ul>
+                                            { pedidos.itensPedido.map((item,index) =>{
+                                                return(
+                                                    <li key={index}>{`${item.nome} (${item.quantidade})`}</li>    
+                                                )
+                                            })}
+                                            </ul>
+                                        </td>
+                                        <td className="px-4 py-3 text-sm border">{pedido.entrega.nomeCliente}</td>
+                                        <td className="px-4 py-3 text-sm border">{pedido.entrega.endereco}</td>
+                                        <td>
+                                        <span className="px-2 py-1 font-semibold leading-tight text-gray-700 bg-gray-100 rounded-sm">{pedido.statusPedido}</span>
+                                        </td>
+                                    </tr>
+                                )
+                            })}
                             </tbody>
                         </table>
                         
@@ -161,61 +81,69 @@ export default function Pedidos (){
                     show={showModal}
                     showModal={setShowModal}
                 >
-                    <form class="w-full max-w-lg">
-                        <div class="flex flex-wrap -mx-3 mb-6">
-                            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
-                                Produto
+                    <form className="w-full max-w-lg" onSubmit={handleSubmit(handlePedido)}>
+                        <div className="flex flex-wrap -mx-3 mb-6">
+                            <div className="w-full px-3 mb-6 md:mb-0">
+                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
+                                Nome do cliente
                             </label>
-                            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" id="grid-first-name" type="text"/>
-                            <p class="text-red-500 text-xs italic">Please fill out this field.</p>
+                            <input 
+                            {...register('entrega.nomeCliente')}
+                            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-last-name" type="text"/>
+                            </div>                            
+                        </div>
+                        <div className="flex flex-wrap -mx-3 mb-6">
+                            <div className="w-full px-3 mb-6 md:mb-0">
+                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-first-name">
+                                Produtos
+                            </label>
+                            <input 
+                            {...register('itensPedido')}
+                            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-last-name" type="text"/>
+                            </div>                            
+                        </div>
+                        <div className="flex flex-wrap -mx-3 mb-6">                            
+                            <div className="w-full md:w-1/2 px-3">
+                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
+                                Forma de pagamento
+                            </label>
+                            <input 
+                            {...register('formaPagamento')}
+                            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-last-name" type="text"/>
                             </div>
-                            <div class="w-full md:w-1/2 px-3">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
-                                Quantidade
+                            <div className="w-full md:w-1/2 px-3">
+                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
+                                Tipo de entrega
                             </label>
-                            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-last-name" type="number"/>
+                            <input 
+                            {...register('entrega.tipoEntrega')}
+                            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-last-name" type="text"/>
                             </div>
                         </div>
-                        <div class="flex flex-wrap -mx-3 mb-6">
-                            <div class="w-full px-3">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-password">
-                                Password
+                        <div className="flex flex-wrap -mx-3 mb-2">
+                            <div className="w-full md:w-1/2 px-3">
+                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
+                                Valor da entrega
                             </label>
-                            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-password" type="password" placeholder="******************"/>
-                            <p class="text-gray-600 text-xs italic">Make it as long and as crazy as you'd like</p>
+                            <input 
+                            {...register('entrega.valorEntrega')}
+                            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-last-name" type="text"/>
+                            </div>
+                            <div className="w-full md:w-1/2 px-3">
+                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-last-name">
+                                Endereço de entrega
+                            </label>
+                            <input 
+                            {...register('entrega.endereco')}
+                            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-last-name" type="text"/>
                             </div>
                         </div>
-                        <div class="flex flex-wrap -mx-3 mb-2">
-                            <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-city">
-                                City
-                            </label>
-                            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-city" type="text" placeholder="Albuquerque"/>
-                            </div>
-                            <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
-                                State
-                            </label>
-                            <div class="relative">
-                                <select class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                                <option>New Mexico</option>
-                                <option>Missouri</option>
-                                <option>Texas</option>
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                                </div>
-                            </div>
-                            </div>
-                            <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-zip">
-                                Zip
-                            </label>
-                            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-zip" type="text" placeholder="90210"/>
-                            </div>
+                        <div className="text-center my-3">
+                            <button className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
+                                Salvar
+                            </button>
                         </div>
-                    </form>
+                    </form>                    
                 </Modal>
             </div>            
         </div>
