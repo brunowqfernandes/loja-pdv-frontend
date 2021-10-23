@@ -6,14 +6,14 @@ import { api } from '../../services/api';
 
 export default function Produtos (){
     const [showModal, setShowModal] = useState(false);
-    const [produtos, setProdutos] = useState({});
+    const [produtos, setProdutos] = useState([]);
     const { register, handleSubmit } = useForm();
 
     useEffect(()=>{
         api.get('/produtos/1').then(function(response){
             setProdutos(response.data)
         })
-    })
+    }, [])
     
     async function handleProduto(data){
         //console.log(data)
@@ -44,7 +44,7 @@ export default function Produtos (){
                             </tr>
                             </thead>
                             <tbody className="bg-white">
-                                { Object.entries(produtos).map((produto,index) => {
+                                { produtos.map((produto,index) => {
                                     return(
                                         <tr className="text-gray-700" key={index}>
                                         <td className="px-4 py-3 border">

@@ -1,19 +1,20 @@
 import Link from 'next/link';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import { useForm } from 'react-hook-form';
 import { Header } from "../../components/Header";
 import { Modal } from '../../components/Modal';
+import { api } from '../../services/api';
 
 export default function Pedidos (){
     const [showModal, setShowModal] = useState(false);
-    const [pedidos, setPedidos] = useState({});
+    const [pedidos, setPedidos] = useState([]);
     const { register, handleSubmit } = useForm();
 
     useEffect(()=>{
         api.get('/pedidos/1').then(function(response){
             setPedidos(response.data)
         })
-    })
+    }, [])
 
     async function handlePedido(data){
         console.log(data)
@@ -43,7 +44,7 @@ export default function Pedidos (){
                             </tr>
                             </thead>
                             <tbody className="bg-white">
-                            { Object.entries(pedidos).map((pedido,index) => {
+                            { pedidos.map((pedido,index) => {
                                 return (
                                     <tr className="text-gray-700" key={index}>
                                         <td className="px-4 py-3 border">
@@ -55,7 +56,7 @@ export default function Pedidos (){
                                         </td>
                                         <td className="px-4 py-3 text-ms border">
                                             <ul>
-                                            { pedidos.itensPedido.map((item,index) =>{
+                                            { pedido.itensPedido.map((item,index) =>{
                                                 return(
                                                     <li key={index}>{`${item.nome} (${item.quantidade})`}</li>    
                                                 )
