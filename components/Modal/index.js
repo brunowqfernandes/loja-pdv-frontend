@@ -27,7 +27,7 @@ export function Modal(props) {
                   </button>
                 </div>
                 {/*body*/}
-                {<div className="relative p-6 flex-auto">
+                {<div className="relative py-2 px-6 flex-auto">
                   {props.children}
                 </div>}
                 {/*footer*/}
