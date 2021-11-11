@@ -1,9 +1,11 @@
 import { useForm } from 'react-hook-form'
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import { Header } from "../../components/Header";
 import { Modal } from '../../components/Modal';
 import { api } from '../../services/api';
 import Image from 'next/image'
+import { AuthContext } from '../../contexts/AuthContext'
+import { parseCookies } from 'nookies';
 
 export default function Produtos (){
     const [showModal, setShowModal] = useState(false);
@@ -11,6 +13,8 @@ export default function Produtos (){
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [ produtoExcluir, setProdutoExcluir] = useState('');
     const [ idProduto, setIdProduto] = useState(0);
+    const [editar,setEditar] = useState(false);
+    const { user } = useContext(AuthContext)
     
     const { register, handleSubmit, formState: {errors} } = useForm(
         { defaultValues: {
@@ -25,27 +29,38 @@ export default function Produtos (){
     );
 
     useEffect(()=>{
-        api.get('/produtos/1').then(function(response){
-            setProdutos(response.data)
-        })
-    }, [])  
+        if(user){
+
+            api.get(`/produtos/${user.id}`).then(function(response){
+                setProdutos(response.data)
+            })
+        }
+    }, [user])  
 
     
     async function handleAddProduto(data){        
-        const response = await api.post('/produtos/1', data)
+        const response = await api.post(`/produtos/${user.id}`, data)        
         let newProdutos = produtos;
-        produtos.push(data)
+        produtos.push(response.data)
         setProdutos(newProdutos);
         setShowModal(false)
     }
     
-    async function handleDeleteProduto(id){
-        //await api.delete(`/produtos/${id}`)
-        let newProdutos = produtos;        
-        newProdutos.splice(newProdutos.findIndex(prod => prod.id == id),1)
-        console.log(id, newProdutos)
+    async function handleUpdateProduto(data){        
+        let newProdutos = produtos;
+        const response = await api.put(`/produtos`, data)
+        newProdutos.splice(newProdutos.findIndex(prod => prod.id == data.id),1)
+        newProdutos.push(response.data)
         setProdutos(newProdutos);
     }
+
+    async function handleDeleteProduto(id){
+        let newProdutos = produtos;        
+        newProdutos.splice(newProdutos.findIndex(prod => prod.id == id),1)
+        await api.delete(`/produtos/${id}`)
+        setProdutos(newProdutos);
+    }
+    
 
     return(
         <div className="flex flex-col h-screen">
@@ -61,6 +76,7 @@ export default function Produtos (){
                         <table className="w-full text-center">
                             <thead>
                             <tr className="text-md font-semibold tracking-wide  text-gray-900 bg-gray-100 uppercase border-b border-gray-600">
+                                <th className="px-4 py-3">Id</th>
                                 <th className="px-4 py-3">Produto</th>
                                 <th className="px-4 py-3">Valor</th>
                                 <th className="px-4 py-3">Qte. Estoque</th>
@@ -68,13 +84,14 @@ export default function Produtos (){
                                 <th className="px-4 py-3">Tipo do produto</th>
                                 <th className="px-4 py-3">Cor</th>
                                 <th className="px-4 py-3">Tamanho</th>
-                                <th></th>
+                                <th className="px-4 py-3">Ações</th>
                             </tr>
                             </thead>
                             <tbody className="bg-white">
-                                { produtos.map((produto,index) => {
+                                { produtos.map((produto) => {
                                     return(
-                                        <tr className="text-gray-700" key={index}>
+                                        <tr className="text-gray-700" key={produto.id}>
+                                        <td className="px-4 py-3 border">{produto.id}</td>
                                         <td className="px-4 py-3 border">
                                         <div className="flex items-center justify-center text-sm">
                                             <div>
@@ -83,7 +100,18 @@ export default function Produtos (){
                                         </div>
                                         </td>
                                         <td className="px-4 py-3 text-ms border">{Number(produto.preco).toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' })}</td>
-                                        <td className="px-4 py-3 text-sm border">{produto.quantidade}</td>
+                                        <td className="px-4 py-3 text-sm border">
+                                            { !editar ? `${produto.quantidade}`
+                                                : (
+                                                    <form onSubmit={handleSubmit(handleUpdateProduto)}>
+                                                        <input name="id" ref={register} type="hidden" value={produto.id} />
+                                                        <input name="quantidade" ref={register} type="number" className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
+                                                        <input id={`submit${produto.id}`} type="submit" hidden />
+                                                    </form>
+                                                )
+                                            }
+                                            
+                                        </td>
                                         <td className="px-4 py-3 text-xs  border">
                                         <span className="px-2 py-1 leading-tight text-green-700 rounded-sm">{produto.descricao}</span>
                                         </td>
@@ -96,14 +124,29 @@ export default function Produtos (){
                                         <td className="px-4 py-3 text-xs  border">
                                         <span className="px-2 py-1 leading-tight text-green-700 rounded-sm">{produto.tamanho}</span>
                                         </td>
-                                        <td>
-                                            <button onClick={() => {
-                                                setIdProduto(produto.id)
-                                                setProdutoExcluir(produto.nome)
-                                                setShowDeleteModal(true)
-                                            }}>
-                                                <Image src='/delete.png' alt="lixeira" width="15" height="15"/>
-                                            </button>
+                                        <td className="px-4 py-3 text-xs  border">
+                                            {!editar ?
+                                            (<>
+                                                <button onClick={()=> {
+                                                    setEditar(true);
+                                                }}
+                                                aria-label="Editar produto">
+                                                    <Image src='/edit.png' alt="lápis e prancheta" width="15" height="15"/>
+                                                </button>
+                                                <button onClick={() => {
+                                                    setIdProduto(produto.id)
+                                                    setProdutoExcluir(produto.nome)
+                                                    setShowDeleteModal(true)
+                                                    
+                                                }}aria-label="deletar produto">
+                                                    <Image src='/delete.png' alt="lixeira" width="15" height="15"/>
+                                                </button>
+                                            </>)
+                                            :
+                                            (
+                                                <label htmlFor={`submit${produto.id}`} className="block w-full bg-gray-700 p-1 text-white cursor-pointer">Salvar</label>
+                                            )
+                                            }
                                         </td>
                                     </tr>          
                                     )
@@ -229,3 +272,21 @@ export default function Produtos (){
             </div>
         </div>)
 }
+
+export async function getServerSideProps(ctx) {
+    // Parse
+    const { 'pdv.user':usuario } = parseCookies(ctx)
+
+    if(!usuario) {
+        return{
+          redirect: {
+            destination: '/',
+            permanent: false
+          }
+        }
+      }
+  
+      return {
+        props: {}
+      }
+  }

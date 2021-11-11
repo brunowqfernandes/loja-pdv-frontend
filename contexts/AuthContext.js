@@ -14,38 +14,26 @@ export function AuthProvider({children}){
   const isAuthenticated = !!user;
 
   useEffect(() => {
-    if(token){
-      api.post('/auth/get_user').then(response => {
-        setUser(response.data.user)
-      })
+    const { 'pdv.user':usuario } = parseCookies()
+    if(usuario){
+      setUser(JSON.parse(usuario))
     }
   }, [])
 
-  async function signIn({email, password}) {
-    const response = await api.post('/auth/authenticate', {
-      email, 
-      password
+  async function signIn({login, senha}) {    
+    let {data:usuario} = await api.get(`/usuarios/login?login=${login}&senha=${senha}`)
+    usuario.senha = '';
+    setCookie(undefined, 'pdv.user', JSON.stringify(usuario), {
+        maxAge: 60 * 60 * 24 // 1 day
     })
 
-    const { token, user } = response.data
-
-    setCookie(undefined, 'psychometrika.token', token, {
-      maxAge: 60 * 60 * 24 // 1 day
-    })
-
-    api.defaults.headers['Authorization'] = `Bearer ${token}`
-
-    setUser(user);
-    
-
-    router.push('/dashboard');
+    setUser(usuario);
+    router.push('/pedidos');
   }
 
   async function signOut(){
-    api.defaults.headers['Authorization'] = '';
-    destroyCookie(undefined, 'psychometrika.token')    
+    destroyCookie(undefined, 'pdv.user')    
     router.push('/');
-      
   }
 
   return(
