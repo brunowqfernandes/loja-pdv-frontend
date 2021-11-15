@@ -28,7 +28,7 @@ export function AuthProvider({children}){
     })
 
     setUser(usuario);
-    router.push('/pedidos');
+    router.push('/home');
   }
 
   async function signOut(){

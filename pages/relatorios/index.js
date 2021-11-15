@@ -49,14 +49,11 @@ export default function Relatorios (){
             <div className="flex flex-col flex-grow justify-center items-center">
                 <h1 className="text-5xl text-gray-900 leading-none flex items-center pb-4 mb-4 border-b border-gray-200">Relatórios</h1>
                 <section className="container mx-auto p-6 font-mono flex justify-center p-10">
-                    <input type="month" onChange={handleDateFilter}/>
+                    <input type="month" value={`${date.getUTCFullYear()}-${(date.getUTCMonth() + 1).toLocaleString(undefined, {minimumIntegerDigits: 2, useGrouping:false})}`} onChange={handleDateFilter}/>
                 </section>
                 <section className="container mx-auto p-6 font-mono">
                     <div className="w-full mx-auto mb-8 rounded-lg shadow-lg">
                         <div className="w-full relative">
-                        <button className="bg-gray-600 hover:bg-gray-700 text-white text-sm px-4 py-2 border rounded-full absolute top-full left-full -translate-x-1/2 transform -translate-y-1/2" onClick={() => setShowModal(true)}>
-                            +
-                        </button>
                         <table className="w-full text-center">
                             <thead>
                             <tr className="text-md font-semibold tracking-wide  text-gray-900 bg-gray-100 uppercase  border-gray-600">

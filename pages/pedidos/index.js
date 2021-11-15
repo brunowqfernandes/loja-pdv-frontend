@@ -13,8 +13,6 @@ export default function Pedidos (){
     const [pedidos, setPedidos] = useState([]);
     const [produtos, setProdutos] = useState([]);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [editar, setEditar] = useState(false);
-    const [ pedidoEditar, setPedidoEditar] = useState(null);
     const { user } = useContext(AuthContext)
 
     const { register, handleSubmit } = useForm({
@@ -70,35 +68,15 @@ export default function Pedidos (){
         const prod = await api.get(`/produtos/${user.id}`)
         setProdutos(prod.data)
     }
-    async function handleUpdatePedido(pedido, e){
-        const itensPedido = []
-        e.target.querySelectorAll('.select-produtos input').forEach(el => {
-            if(Number(el.value.length) > 0){
-                const idProduto = el.parentNode.dataset.produto
-                const item = {
-                    produto: {
-                        id: idProduto
-                    },
-                    quantidade: el.value
-                }
-                itensPedido.push(item)
-            }
-        })        
-        if(!itensPedido.length){
-            alert('É preciso selecionar ao menos um produto')
-            return
-        }
-        pedido.itensPedido = itensPedido
-        const response = await api.put(`/pedidos/${pedido.id}`, pedido)
-        // console.log(response)
-        const newPedidos = pedidos;
-        newPedidos.splice(newPedidos.findIndex(ped => ped.id == pedido.id),1)
+    async function handleUpdatePedido(data){        
+        let newPedidos = pedidos;
+        const response = await api.put(`/pedidos`, data)
+        newPedidos.splice(newPedidos.findIndex(ped => ped.id == data.id),1)
         newPedidos.push(response.data)
         setPedidos(newPedidos);
-        setShowModal(false)
-        response = await api.get('/produtos/1')
-        setProdutos(response.data)
+        document.querySelector('.editar').classList.remove('editar')
     }
+
     async function handleDeletePedido(id){
         await api.delete(`/produtos/${id}`)
         let newPedidos = pedidos;        
@@ -133,7 +111,7 @@ export default function Pedidos (){
                                 <th className="px-4 py-3">Valor da entrega</th>
                                 <th className="px-4 py-3">End. Entrega</th>
                                 <th className="px-4 py-3">Status</th>
-                                <th className="px-4 py-3"></th>
+                                <th className="px-4 py-3">Ações</th>
                             </tr>
                             </thead>
                             <tbody className="bg-white">
@@ -164,23 +142,43 @@ export default function Pedidos (){
                                         <td className="px-4 py-3 text-sm border">{Number(pedido.entrega.valorEntrega).toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' })}</td>
                                         <td className="px-4 py-3 text-sm border">{pedido.entrega.endereco}</td>
                                         <td className="px-4 py-3 text-sm border">
-                                        <span className="px-2 py-1 font-semibold leading-tight text-gray-700 rounded-sm">{pedido.statusPedido}</span>
+                                            <div className="info">
+                                                <span className="px-2 py-1 font-semibold leading-tight text-gray-700 rounded-sm">{pedido.statusPedido}</span>
+                                            </div>
+                                            <form onSubmit={handleSubmit(handleUpdatePedido)}>
+                                                <input name="id" ref={register} type="hidden" value={pedido.id} />
+                                            <select 
+                                            name="statusPedido" 
+                                            ref={register}
+                                            required
+                                            className="block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="status" type="text">
+                                                <option value="" selected hidden>{pedido.statusPedido}</option>
+                                                <option value="AGUARDANDO_ESTOQUE">AGUARDANDO ESTOQUE</option>
+                                                <option value="REALIZADO">REALIZADO</option>
+                                                <option value="ENTREGUE">ENTREGUE</option>
+                                                <option value="CANCELADO">CANCELADO</option>
+                                            </select>
+                                            <input id={`submit${pedido.id}`} type="submit" hidden />
+                                            </form>
                                         </td>
-                                        <td className="px-4 py-3 text-sm border">
-                                            <button aria-label="editar pedido"
-                                                onClick={() => {
-                                                    setPedidoEditar(pedido)
-                                                    setEditar(true)
-                                                }}
-                                            >
+                                        <td className="px-4 py-3 text-xs  border">
+                                            <div className="info">
+                                            <button onClick={(e)=> {
+                                                e.target.parentNode.parentNode.parentNode.parentNode.parentNode.classList.add('editar')
+                                            }}
+                                            aria-label="Editar produto">
                                                 <Image src='/edit.png' alt="lápis e prancheta" width="15" height="15"/>
                                             </button>
-                                            <button onClick={() => {
-                                                setIdPedido(pedido.id)                                                
+                                            {/* <button onClick={() => {
+                                                setIdProduto(produto.id)
+                                                setProdutoExcluir(produto.nome)
                                                 setShowDeleteModal(true)
-                                            }}>
+                                                
+                                            }}aria-label="deletar produto">
                                                 <Image src='/delete.png' alt="lixeira" width="15" height="15"/>
-                                            </button>
+                                            </button> */}
+                                            </div>
+                                            <label htmlFor={`submit${pedido.id}`} className="block w-full bg-gray-700 p-1 text-white cursor-pointer">Salvar</label>
                                         </td>
                                     </tr>
                                 )
@@ -197,7 +195,7 @@ export default function Pedidos (){
                     showModal={setShowModal}
                 >
                     <form className="w-full max-w-lg" onSubmit={handleSubmit(handlePedido)}>
-                        <input type="hidden" name="vendedor.id" value={user.id} ref={register} />
+                        <input type="hidden" name="vendedor.id" value={user?.id} ref={register} />
                         <div className="flex flex-wrap -mx-3 mb-6">
                             <div className="w-full px-3 mb-6 md:mb-0">
                             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="cliente">

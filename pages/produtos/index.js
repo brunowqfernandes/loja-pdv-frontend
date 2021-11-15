@@ -48,10 +48,11 @@ export default function Produtos (){
     
     async function handleUpdateProduto(data){        
         let newProdutos = produtos;
-        const response = await api.put(`/produtos`, data)
+        const response = await api.put(`/produtos/${user.id}`, data)
         newProdutos.splice(newProdutos.findIndex(prod => prod.id == data.id),1)
         newProdutos.push(response.data)
         setProdutos(newProdutos);
+        document.querySelector('.editar').classList.remove('editar')
     }
 
     async function handleDeleteProduto(id){
@@ -101,16 +102,15 @@ export default function Produtos (){
                                         </td>
                                         <td className="px-4 py-3 text-ms border">{Number(produto.preco).toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' })}</td>
                                         <td className="px-4 py-3 text-sm border">
-                                            { !editar ? `${produto.quantidade}`
-                                                : (
-                                                    <form onSubmit={handleSubmit(handleUpdateProduto)}>
-                                                        <input name="id" ref={register} type="hidden" value={produto.id} />
-                                                        <input name="quantidade" ref={register} type="number" className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
-                                                        <input id={`submit${produto.id}`} type="submit" hidden />
-                                                    </form>
-                                                )
-                                            }
-                                            
+                                            <div className="info">
+                                                {produto.quantidade}
+                                            </div>
+                                            <form onSubmit={handleSubmit(handleUpdateProduto)}>
+                                                <input name="id" ref={register} type="hidden" value={produto.id} />
+                                                {`Atual: ${produto.quantidade}`}<br />
+                                                <input name="quantidade" ref={register} type="number" className="appearance-none w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
+                                                <input id={`submit${produto.id}`} type="submit" hidden />
+                                            </form>
                                         </td>
                                         <td className="px-4 py-3 text-xs  border">
                                         <span className="px-2 py-1 leading-tight text-green-700 rounded-sm">{produto.descricao}</span>
@@ -125,28 +125,23 @@ export default function Produtos (){
                                         <span className="px-2 py-1 leading-tight text-green-700 rounded-sm">{produto.tamanho}</span>
                                         </td>
                                         <td className="px-4 py-3 text-xs  border">
-                                            {!editar ?
-                                            (<>
-                                                <button onClick={()=> {
-                                                    setEditar(true);
-                                                }}
-                                                aria-label="Editar produto">
-                                                    <Image src='/edit.png' alt="lápis e prancheta" width="15" height="15"/>
-                                                </button>
-                                                <button onClick={() => {
-                                                    setIdProduto(produto.id)
-                                                    setProdutoExcluir(produto.nome)
-                                                    setShowDeleteModal(true)
-                                                    
-                                                }}aria-label="deletar produto">
-                                                    <Image src='/delete.png' alt="lixeira" width="15" height="15"/>
-                                                </button>
-                                            </>)
-                                            :
-                                            (
-                                                <label htmlFor={`submit${produto.id}`} className="block w-full bg-gray-700 p-1 text-white cursor-pointer">Salvar</label>
-                                            )
-                                            }
+                                            <div className="info">
+                                            <button onClick={(e)=> {
+                                                e.target.parentNode.parentNode.parentNode.parentNode.parentNode.classList.add('editar')
+                                            }}
+                                            aria-label="Editar produto">
+                                                <Image src='/edit.png' alt="lápis e prancheta" width="15" height="15"/>
+                                            </button>
+                                            <button onClick={() => {
+                                                setIdProduto(produto.id)
+                                                setProdutoExcluir(produto.nome)
+                                                setShowDeleteModal(true)
+                                                
+                                            }}aria-label="deletar produto">
+                                                <Image src='/delete.png' alt="lixeira" width="15" height="15"/>
+                                            </button>
+                                            </div>
+                                            <label htmlFor={`submit${produto.id}`} className="block w-full bg-gray-700 p-1 text-white cursor-pointer">Salvar</label>
                                         </td>
                                     </tr>          
                                     )

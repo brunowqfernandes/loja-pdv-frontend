@@ -80,7 +80,7 @@ export async function getServerSideProps(ctx) {
     if(usuario) {
         return{
           redirect: {
-            destination: '/produtos',
+            destination: '/home',
             permanent: false
           }
         }

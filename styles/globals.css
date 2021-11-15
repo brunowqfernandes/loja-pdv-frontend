@@ -14,3 +14,13 @@ a {
 * {
   box-sizing: border-box;
 }
+table tr form, table tr label{
+  display: none!important;  
+}
+table tr.editar form , table tr.editar label{
+  display: block!important;
+}
+
+table tr.editar .info{
+  display: none!important;
+}
