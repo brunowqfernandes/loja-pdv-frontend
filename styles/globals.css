@@ -14,10 +14,10 @@ a {
 * {
   box-sizing: border-box;
 }
-table tr form, table tr label{
+table tr form, table tr label, table tr .input{
   display: none!important;  
 }
-table tr.editar form , table tr.editar label{
+table tr.editar form , table tr.editar label, table tr.editar .input{
   display: block!important;
 }
 

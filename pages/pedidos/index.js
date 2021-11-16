@@ -35,7 +35,11 @@ export default function Pedidos (){
                 setPedidos(response.data)
             })
             api.get(`/produtos/${user.id}`).then(function(response){
-                setProdutos(response.data)
+                setProdutos(response.data.filter(produto => {
+                    if( produto.tipoProduto !== "DELETADO"){
+                        return produto
+                    }
+                }))
             })
         }
     }, [user])
@@ -68,7 +72,7 @@ export default function Pedidos (){
         const prod = await api.get(`/produtos/${user.id}`)
         setProdutos(prod.data)
     }
-    async function handleUpdatePedido(data){        
+    async function handleUpdatePedido(data){
         let newPedidos = pedidos;
         const response = await api.put(`/pedidos`, data)
         newPedidos.splice(newPedidos.findIndex(ped => ped.id == data.id),1)

@@ -32,7 +32,11 @@ export default function Produtos (){
         if(user){
 
             api.get(`/produtos/${user.id}`).then(function(response){
-                setProdutos(response.data)
+                setProdutos(response.data.filter(produto => {
+                    if( produto.tipoProduto !== "DELETADO"){
+                        return produto
+                    }
+                }))
             })
         }
     }, [user])  
@@ -100,12 +104,20 @@ export default function Produtos (){
                                             </div>
                                         </div>
                                         </td>
-                                        <td className="px-4 py-3 text-ms border">{Number(produto.preco).toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' })}</td>
+                                        <td className="px-4 py-3 text-ms border">
+                                            <div className="input">
+                                                {`Atual: ${Number(produto.preco).toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' })}`}
+                                                <input form="formUpdate" type="number" step="0.01" name="preco" ref={register} required className="appearance-none w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
+                                            </div>
+                                            <div className="info">
+                                                   {Number(produto.preco).toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' })}
+                                            </div>
+                                        </td>
                                         <td className="px-4 py-3 text-sm border">
                                             <div className="info">
                                                 {produto.quantidade}
                                             </div>
-                                            <form onSubmit={handleSubmit(handleUpdateProduto)}>
+                                            <form id="formUpdate" onSubmit={handleSubmit(handleUpdateProduto)}>
                                                 <input name="id" ref={register} type="hidden" value={produto.id} />
                                                 {`Atual: ${produto.quantidade}`}<br />
                                                 <input name="quantidade" ref={register} type="number" className="appearance-none w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
