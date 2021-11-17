@@ -13,7 +13,8 @@ export default function Produtos (){
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [ produtoExcluir, setProdutoExcluir] = useState('');
     const [ idProduto, setIdProduto] = useState(0);
-    const [editar,setEditar] = useState(false);
+    const [preco,setPreco] = useState(null);
+    const [estoque,setEstoque] = useState(null);
     const { user } = useContext(AuthContext)
     
     const { register, handleSubmit, formState: {errors} } = useForm(
@@ -33,7 +34,7 @@ export default function Produtos (){
 
             api.get(`/produtos/${user.id}`).then(function(response){
                 setProdutos(response.data.filter(produto => {
-                    if( produto.tipoProduto !== "DELETADO"){
+                    if( produto.tipoProduto != "DELETADO"){
                         return produto
                     }
                 }))
@@ -42,20 +43,29 @@ export default function Produtos (){
     }, [user])  
 
     
-    async function handleAddProduto(data){        
+    async function handleAddProduto(data){
+        console.log(data)
         const response = await api.post(`/produtos/${user.id}`, data)        
+        console.log(response.datadata)
         let newProdutos = produtos;
-        produtos.push(response.data)
+        newProdutos.push(response.data)
         setProdutos(newProdutos);
         setShowModal(false)
     }
     
-    async function handleUpdateProduto(data){        
+    async function handleUpdateProduto(){        
         let newProdutos = produtos;
-        const response = await api.put(`/produtos/${user.id}`, data)
+        const obj = {
+            id: idProduto,
+            preco: preco,
+            quantidade: estoque
+        }
+        console.log(obj)
+        const {data} = await api.put(`/produtos/${user.id}`, obj)
         newProdutos.splice(newProdutos.findIndex(prod => prod.id == data.id),1)
-        newProdutos.push(response.data)
-        setProdutos(newProdutos);
+        console.log(newProdutos)
+        newProdutos.push(data)
+        await setProdutos(newProdutos);
         document.querySelector('.editar').classList.remove('editar')
     }
 
@@ -93,9 +103,9 @@ export default function Produtos (){
                             </tr>
                             </thead>
                             <tbody className="bg-white">
-                                { produtos.map((produto) => {
+                                { produtos.sort((a,b) => a.id - b.id ).map((produto,index) => {
                                     return(
-                                        <tr className="text-gray-700" key={produto.id}>
+                                        <tr className="text-gray-700" key={index}>
                                         <td className="px-4 py-3 border">{produto.id}</td>
                                         <td className="px-4 py-3 border">
                                         <div className="flex items-center justify-center text-sm">
@@ -107,7 +117,7 @@ export default function Produtos (){
                                         <td className="px-4 py-3 text-ms border">
                                             <div className="input">
                                                 {`Atual: ${Number(produto.preco).toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' })}`}
-                                                <input form="formUpdate" type="number" step="0.01" name="preco" ref={register} required className="appearance-none w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
+                                                <input type="number" step="0.01" name="preco" onChange={e => setPreco(e.target.value)} className="appearance-none w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
                                             </div>
                                             <div className="info">
                                                    {Number(produto.preco).toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' })}
@@ -117,12 +127,10 @@ export default function Produtos (){
                                             <div className="info">
                                                 {produto.quantidade}
                                             </div>
-                                            <form id="formUpdate" onSubmit={handleSubmit(handleUpdateProduto)}>
-                                                <input name="id" ref={register} type="hidden" value={produto.id} />
-                                                {`Atual: ${produto.quantidade}`}<br />
-                                                <input name="quantidade" ref={register} type="number" className="appearance-none w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
-                                                <input id={`submit${produto.id}`} type="submit" hidden />
-                                            </form>
+                                                <div className="input">
+                                                    {`Atual: ${produto.quantidade}`}<br />
+                                                    <input name="quantidade" type="number" onChange={e => setEstoque(e.target.value)} className="appearance-none w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
+                                                </div>
                                         </td>
                                         <td className="px-4 py-3 text-xs  border">
                                         <span className="px-2 py-1 leading-tight text-green-700 rounded-sm">{produto.descricao}</span>
@@ -139,6 +147,7 @@ export default function Produtos (){
                                         <td className="px-4 py-3 text-xs  border">
                                             <div className="info">
                                             <button onClick={(e)=> {
+                                                setIdProduto(produto.id)
                                                 e.target.parentNode.parentNode.parentNode.parentNode.parentNode.classList.add('editar')
                                             }}
                                             aria-label="Editar produto">
@@ -153,7 +162,9 @@ export default function Produtos (){
                                                 <Image src='/delete.png' alt="lixeira" width="15" height="15"/>
                                             </button>
                                             </div>
-                                            <label htmlFor={`submit${produto.id}`} className="block w-full bg-gray-700 p-1 text-white cursor-pointer">Salvar</label>
+                                            <div className="input">
+                                            <button onClick={handleUpdateProduto} className="block w-full bg-gray-700 p-1 text-white cursor-pointer">Salvar</button>
+                                            </div>
                                         </td>
                                     </tr>          
                                     )

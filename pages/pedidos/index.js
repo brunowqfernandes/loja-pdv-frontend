@@ -12,6 +12,8 @@ export default function Pedidos (){
     const [showModal, setShowModal] = useState(false);
     const [pedidos, setPedidos] = useState([]);
     const [produtos, setProdutos] = useState([]);
+    const [idPedido, setIdPedido] = useState(0);
+    const [statusPedido, setStatusPedido] = useState(0);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const { user } = useContext(AuthContext)
 
@@ -63,8 +65,9 @@ export default function Pedidos (){
             return
         }
         data.itensPedido = itensPedido
-        const response = await api.post('/pedidos', data)
-        // console.log(response)
+        console.log(data)
+        const response = await api.post('/pedidos', data)        
+        console.log(response.data)
         const newPedidos = pedidos;
         newPedidos.push(response.data)
         setPedidos(newPedidos);
@@ -72,11 +75,15 @@ export default function Pedidos (){
         const prod = await api.get(`/produtos/${user.id}`)
         setProdutos(prod.data)
     }
-    async function handleUpdatePedido(data){
+    async function handleUpdatePedido(){
         let newPedidos = pedidos;
-        const response = await api.put(`/pedidos`, data)
+        const obj = {
+            id: idPedido,
+            statusPedido: statusPedido
+        }
+        const {data} = await api.put(`/pedidos`, obj)
         newPedidos.splice(newPedidos.findIndex(ped => ped.id == data.id),1)
-        newPedidos.push(response.data)
+        newPedidos.push(data)
         setPedidos(newPedidos);
         document.querySelector('.editar').classList.remove('editar')
     }
@@ -149,12 +156,10 @@ export default function Pedidos (){
                                             <div className="info">
                                                 <span className="px-2 py-1 font-semibold leading-tight text-gray-700 rounded-sm">{pedido.statusPedido}</span>
                                             </div>
-                                            <form onSubmit={handleSubmit(handleUpdatePedido)}>
-                                                <input name="id" ref={register} type="hidden" value={pedido.id} />
+                                            <div className="input">
                                             <select 
-                                            name="statusPedido" 
-                                            ref={register}
-                                            required
+                                            name="statusPedido"
+                                            onChange={e => setStatusPedido(e.target.value)}
                                             className="block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="status" type="text">
                                                 <option value="" selected hidden>{pedido.statusPedido}</option>
                                                 <option value="AGUARDANDO_ESTOQUE">AGUARDANDO ESTOQUE</option>
@@ -163,11 +168,12 @@ export default function Pedidos (){
                                                 <option value="CANCELADO">CANCELADO</option>
                                             </select>
                                             <input id={`submit${pedido.id}`} type="submit" hidden />
-                                            </form>
+                                            </div>
                                         </td>
                                         <td className="px-4 py-3 text-xs  border">
                                             <div className="info">
                                             <button onClick={(e)=> {
+                                                setIdPedido(pedido.id)
                                                 e.target.parentNode.parentNode.parentNode.parentNode.parentNode.classList.add('editar')
                                             }}
                                             aria-label="Editar produto">
@@ -182,7 +188,9 @@ export default function Pedidos (){
                                                 <Image src='/delete.png' alt="lixeira" width="15" height="15"/>
                                             </button> */}
                                             </div>
-                                            <label htmlFor={`submit${pedido.id}`} className="block w-full bg-gray-700 p-1 text-white cursor-pointer">Salvar</label>
+                                            <div className="input">
+                                            <button onClick={handleUpdatePedido } className="block w-full bg-gray-700 p-1 text-white cursor-pointer">Salvar</button>
+                                            </div>
                                         </td>
                                     </tr>
                                 )
