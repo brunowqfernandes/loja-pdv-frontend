@@ -54,7 +54,7 @@ export default function Produtos (){
     }
     
     async function handleUpdateProduto(){        
-        let newProdutos = produtos;
+        let newProdutos = [...produtos];
         const obj = {
             id: idProduto,
             preco: preco,
@@ -85,93 +85,92 @@ export default function Produtos (){
                 <section className="container mx-auto p-6 font-mono">
                     <div className="w-3/4 mx-auto mb-8 rounded-lg shadow-lg">
                         <div className="w-full relative">
-                        <button className="bg-gray-600 hover:bg-gray-700 text-white text-sm px-4 py-2 border rounded-full absolute top-full left-full -translate-x-1/2 transform -translate-y-1/2" onClick={() => setShowModal(true)} aria-label="adicionar um produto">
-                            +
-                        </button>
-                        <table className="w-full text-center">
-                            <thead>
-                            <tr className="text-md font-semibold tracking-wide  text-gray-900 bg-gray-100 uppercase border-b border-gray-600">
-                                <th className="px-4 py-3">Id</th>
-                                <th className="px-4 py-3">Produto</th>
-                                <th className="px-4 py-3">Valor</th>
-                                <th className="px-4 py-3">Qte. Estoque</th>
-                                <th className="px-4 py-3">Descrição</th>
-                                <th className="px-4 py-3">Tipo do produto</th>
-                                <th className="px-4 py-3">Cor</th>
-                                <th className="px-4 py-3">Tamanho</th>
-                                <th className="px-4 py-3">Ações</th>
-                            </tr>
-                            </thead>
-                            <tbody className="bg-white">
-                                { produtos.sort((a,b) => a.id - b.id ).map((produto,index) => {
-                                    return(
-                                        <tr className="text-gray-700" key={index}>
-                                        <td className="px-4 py-3 border">{produto.id}</td>
-                                        <td className="px-4 py-3 border">
-                                        <div className="flex items-center justify-center text-sm">
-                                            <div>
-                                            <p className="text-black">{produto.nome}</p>
-                                            </div>
-                                        </div>
-                                        </td>
-                                        <td className="px-4 py-3 text-ms border">
-                                            <div className="input">
-                                                {`Atual: ${Number(produto.preco).toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' })}`}
-                                                <input type="number" step="0.01" name="preco" onChange={e => setPreco(e.target.value)} className="appearance-none w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
-                                            </div>
-                                            <div className="info">
-                                                   {Number(produto.preco).toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' })}
-                                            </div>
-                                        </td>
-                                        <td className="px-4 py-3 text-sm border">
-                                            <div className="info">
-                                                {produto.quantidade}
-                                            </div>
-                                                <div className="input">
-                                                    {`Atual: ${produto.quantidade}`}<br />
-                                                    <input name="quantidade" type="number" onChange={e => setEstoque(e.target.value)} className="appearance-none w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
+                            <button className="bg-gray-600 hover:bg-gray-700 text-white text-sm px-4 py-2 border rounded-full absolute top-full left-full -translate-x-1/2 transform -translate-y-1/2" onClick={() => setShowModal(true)} aria-label="adicionar um produto">
+                                +
+                            </button>
+                            <table className="w-full text-center">
+                                <thead>
+                                <tr className="text-md font-semibold tracking-wide  text-gray-900 bg-gray-100 uppercase border-b border-gray-600">
+                                    <th className="px-4 py-3">Id</th>
+                                    <th className="px-4 py-3">Produto</th>
+                                    <th className="px-4 py-3">Valor</th>
+                                    <th className="px-4 py-3">Qte. Estoque</th>
+                                    <th className="px-4 py-3">Descrição</th>
+                                    <th className="px-4 py-3">Tipo do produto</th>
+                                    <th className="px-4 py-3">Cor</th>
+                                    <th className="px-4 py-3">Tamanho</th>
+                                    <th className="px-4 py-3">Ações</th>
+                                </tr>
+                                </thead>
+                                <tbody className="bg-white">
+                                    { produtos.sort((a,b) => a.id - b.id ).map((produto,index) => {
+                                        return(
+                                            <tr className="text-gray-700" key={index}>
+                                            <td className="px-4 py-3 border">{produto.id}</td>
+                                            <td className="px-4 py-3 border">
+                                            <div className="flex items-center justify-center text-sm">
+                                                <div>
+                                                <p className="text-black">{produto.nome}</p>
                                                 </div>
-                                        </td>
-                                        <td className="px-4 py-3 text-xs  border">
-                                        <span className="px-2 py-1 leading-tight text-green-700 rounded-sm">{produto.descricao}</span>
-                                        </td>
-                                        <td className="px-4 py-3 text-xs  border">
-                                        <span className="px-2 py-1 leading-tight text-green-700 rounded-sm"> {produto.tipoProduto} </span>
-                                        </td>
-                                        <td className="px-4 py-3 text-xs  border">
-                                        <span className="px-2 py-1 leading-tight text-green-700 rounded-sm">{produto.cor}</span>
-                                        </td>
-                                        <td className="px-4 py-3 text-xs  border">
-                                        <span className="px-2 py-1 leading-tight text-green-700 rounded-sm">{produto.tamanho}</span>
-                                        </td>
-                                        <td className="px-4 py-3 text-xs  border">
-                                            <div className="info">
-                                            <button onClick={(e)=> {
-                                                setIdProduto(produto.id)
-                                                e.target.parentNode.parentNode.parentNode.parentNode.parentNode.classList.add('editar')
-                                            }}
-                                            aria-label="Editar produto">
-                                                <Image src='/edit.png' alt="lápis e prancheta" width="15" height="15"/>
-                                            </button>
-                                            <button onClick={() => {
-                                                setIdProduto(produto.id)
-                                                setProdutoExcluir(produto.nome)
-                                                setShowDeleteModal(true)
-                                                
-                                            }}aria-label="deletar produto">
-                                                <Image src='/delete.png' alt="lixeira" width="15" height="15"/>
-                                            </button>
                                             </div>
-                                            <div className="input">
-                                            <button onClick={handleUpdateProduto} className="block w-full bg-gray-700 p-1 text-white cursor-pointer">Salvar</button>
-                                            </div>
-                                        </td>
-                                    </tr>          
-                                    )
-                                })}
-                            </tbody>
-                        </table>
-                        
+                                            </td>
+                                            <td className="px-4 py-3 text-ms border">
+                                                <div className="input">
+                                                    {`Atual: ${Number(produto.preco).toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' })}`}
+                                                    <input type="number" step="0.01" name="preco" onChange={e => setPreco(e.target.value)} className="appearance-none w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
+                                                </div>
+                                                <div className="info">
+                                                    {Number(produto.preco).toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' })}
+                                                </div>
+                                            </td>
+                                            <td className="px-4 py-3 text-sm border">
+                                                <div className="info">
+                                                    {produto.quantidade}
+                                                </div>
+                                                    <div className="input">
+                                                        {`Atual: ${produto.quantidade}`}<br />
+                                                        <input name="quantidade" type="number" onChange={e => setEstoque(e.target.value)} className="appearance-none w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"/>
+                                                    </div>
+                                            </td>
+                                            <td className="px-4 py-3 text-xs  border">
+                                            <span className="px-2 py-1 leading-tight text-green-700 rounded-sm">{produto.descricao}</span>
+                                            </td>
+                                            <td className="px-4 py-3 text-xs  border">
+                                            <span className="px-2 py-1 leading-tight text-green-700 rounded-sm"> {produto.tipoProduto} </span>
+                                            </td>
+                                            <td className="px-4 py-3 text-xs  border">
+                                            <span className="px-2 py-1 leading-tight text-green-700 rounded-sm">{produto.cor}</span>
+                                            </td>
+                                            <td className="px-4 py-3 text-xs  border">
+                                            <span className="px-2 py-1 leading-tight text-green-700 rounded-sm">{produto.tamanho}</span>
+                                            </td>
+                                            <td className="px-4 py-3 text-xs  border">
+                                                <div className="info">
+                                                <button onClick={(e)=> {
+                                                    setIdProduto(produto.id)
+                                                    e.target.parentNode.parentNode.parentNode.parentNode.parentNode.classList.add('editar')
+                                                }}
+                                                aria-label="Editar produto">
+                                                    <Image src='/edit.png' alt="lápis e prancheta" width="20" height="20"/>
+                                                </button>
+                                                <button onClick={() => {
+                                                    setIdProduto(produto.id)
+                                                    setProdutoExcluir(produto.nome)
+                                                    setShowDeleteModal(true)
+                                                    
+                                                }}aria-label="deletar produto">
+                                                    <Image src='/delete.png' alt="lixeira" width="20" height="20"/>
+                                                </button>
+                                                </div>
+                                                <div className="input">
+                                                <button onClick={handleUpdateProduto} className="block w-full bg-gray-700 p-1 text-white cursor-pointer">Salvar</button>
+                                                </div>
+                                            </td>
+                                        </tr>          
+                                        )
+                                    })}
+                                </tbody>
+                            </table>                        
                         </div>
                     </div>
                 </section>

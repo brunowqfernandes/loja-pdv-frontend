@@ -76,7 +76,7 @@ export default function Pedidos (){
         setProdutos(prod.data)
     }
     async function handleUpdatePedido(){
-        let newPedidos = pedidos;
+        let newPedidos = [...pedidos];
         const obj = {
             id: idPedido,
             statusPedido: statusPedido
@@ -177,7 +177,7 @@ export default function Pedidos (){
                                                 e.target.parentNode.parentNode.parentNode.parentNode.parentNode.classList.add('editar')
                                             }}
                                             aria-label="Editar produto">
-                                                <Image src='/edit.png' alt="lápis e prancheta" width="15" height="15"/>
+                                                <Image src='/edit.png' alt="lápis e prancheta" width="20" height="20"/>
                                             </button>
                                             {/* <button onClick={() => {
                                                 setIdProduto(produto.id)
