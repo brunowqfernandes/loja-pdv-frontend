@@ -7,9 +7,11 @@ import { Modal } from '../../components/Modal';
 import { api } from '../../services/api';
 import { AuthContext } from "../../contexts/AuthContext";
 import { parseCookies } from "nookies";
+import axios from "axios";
 
 export default function Pedidos (){
     const [showModal, setShowModal] = useState(false);
+    const [showError, setShowError] = useState(false);
     const [pedidos, setPedidos] = useState([]);
     const [produtos, setProdutos] = useState([]);
     const [idPedido, setIdPedido] = useState(0);
@@ -25,7 +27,10 @@ export default function Pedidos (){
                 nomeCliente: '',
                 tipoEntrega: '',
                 valorEntrega: '',
-                endereco: ''
+                cep: '',
+                endereco: '',
+                num: '',
+                bairro: ''
             }
             
         }
@@ -45,6 +50,26 @@ export default function Pedidos (){
             })
         }
     }, [user])
+
+    async function verificaCep(cep) {
+     if (cep.length == 8) {
+        setShowError(false)
+        document.querySelector('[name="entrega.cep"]').disabled = false;
+        const {data} = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+        if(data.erro) {
+            setShowError(true);
+            document.querySelector('[name="entrega.endereco"]').disabled = false;
+            document.querySelector('[name="entrega.bairro"]').disabled = false;
+            document.querySelector('[name="entrega.cep"]').disabled = false;
+            return
+        }
+        console.log(data);
+        document.querySelector('[name="entrega.endereco"]').value = data.logradouro;
+        document.querySelector('[name="entrega.cep"]').value = data.cep;
+        document.querySelector('[name="entrega.bairro"]').value = data.bairro;
+        document.querySelector('[name="entrega.cep"]').disabled = false;
+     }
+    }
 
     async function handlePedido(data, e){
         const itensPedido = []
@@ -282,11 +307,48 @@ export default function Pedidos (){
                             </div>
                             <div className="w-full md:w-1/2 px-3">
                             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="endereco">
-                                Endereço de entrega
+                                CEP
+                            </label>
+                            <input 
+                            name='entrega.cep'
+                            required
+                            onChange={(e) => verificaCep(e.target.value)}
+                            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="endereco" type="text"/>
+                            {showError && <p className="text-red-500">Cep não encontrado. <br /> Insira manualmente o endereco.</p>}
+                            </div>
+                        </div>
+                        <div className="flex flex-wrap -mx-3 mb-2">
+                            <div className="w-full px-3 mb-6 md:mb-0">
+                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="endereco">
+                                Rua
                             </label>
                             <input 
                             name='entrega.endereco'
                             required
+                            disabled
+                            ref={register}
+                            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="endereco" type="text"/>
+                            </div>
+                        </div>
+                        <div className="flex flex-wrap -mx-3 mb-2">
+                            <div className="w-full md:w-4/12 px-3 mb-6 md:mb-0">
+                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="endereco">
+                                Número
+                            </label>
+                            <input 
+                            name='entrega.num'
+                            required
+                            ref={register}
+                            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="endereco" type="text"/>
+                            </div>
+                            <div className="w-full md:w-8/12 px-3 mb-6 md:mb-0">
+                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="endereco">
+                                Bairro
+                            </label>
+                            <input 
+                            name='entrega.bairro'
+                            required
+                            disabled
                             ref={register}
                             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="endereco" type="text"/>
                             </div>
