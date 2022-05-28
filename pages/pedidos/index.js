@@ -15,6 +15,7 @@ export default function Pedidos (){
     const [pedidos, setPedidos] = useState([]);
     const [produtos, setProdutos] = useState([]);
     const [idPedido, setIdPedido] = useState(0);
+    const [cep, setCep] = useState('');
     const [statusPedido, setStatusPedido] = useState(0);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const { user } = useContext(AuthContext)
@@ -51,7 +52,7 @@ export default function Pedidos (){
         }
     }, [user])
 
-    async function verificaCep(cep) {
+    async function verificaCep() {
      if (cep.length == 8) {
         setShowError(false)
         document.querySelector('[name="entrega.cep"]').disabled = false;
@@ -123,15 +124,15 @@ export default function Pedidos (){
 
 
     return(
-        <div className="flex flex-col h-screen">
+        <div className="flex flex-col h-screen" aria-live="polite">
             <Header/>
-            <div className="flex flex-col flex-grow justify-center items-center">
+            <div className="flex flex-col flex-grow justify-center items-center" role="main">
                 <h1 className="text-5xl text-gray-900 leading-none flex items-center pb-4 mb-4 border-b border-gray-200">Pedidos</h1>
                 
                 <section className="container mx-auto p-6 font-mono">
                     <div className="w-full mx-auto mb-8 rounded-lg shadow-lg">
                         <div className="w-full relative">
-                        <button className="bg-gray-600 hover:bg-gray-700 text-white text-sm px-4 py-2 border rounded-full absolute top-full left-full -translate-x-1/2 transform -translate-y-1/2" onClick={() => setShowModal(true)}>
+                        <button className="bg-gray-600 hover:bg-gray-700 text-white text-sm px-4 py-2 border rounded-full absolute top-full left-full -translate-x-1/2 transform -translate-y-1/2" onClick={() => setShowModal(true)} aria-label="Adicionar novo pedido">
                             +
                         </button>
                         <table className="w-full text-center">
@@ -145,7 +146,7 @@ export default function Pedidos (){
                                 <th className="px-4 py-3">Forma de pagamento</th>
                                 <th className="px-4 py-3">Tipo de Entrega</th>
                                 <th className="px-4 py-3">Valor da entrega</th>
-                                <th className="px-4 py-3">End. Entrega</th>
+                                <th className="px-4 py-3" aria-label="Emdereço de entrega">End. Entrega</th>
                                 <th className="px-4 py-3">Status</th>
                                 <th className="px-4 py-3">Ações</th>
                             </tr>
@@ -186,7 +187,6 @@ export default function Pedidos (){
                                             name="statusPedido"
                                             onChange={e => setStatusPedido(e.target.value)}
                                             className="block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="status" type="text">
-                                                <option value="" selected hidden>{pedido.statusPedido}</option>
                                                 <option value="AGUARDANDO_ESTOQUE">AGUARDANDO ESTOQUE</option>
                                                 <option value="REALIZADO">REALIZADO</option>
                                                 <option value="ENTREGUE">ENTREGUE</option>
@@ -197,10 +197,20 @@ export default function Pedidos (){
                                         </td>
                                         <td className="px-4 py-3 text-xs  border">
                                             <div className="info">
-                                            <button onClick={(e)=> {
+                                            <button onKeyUp={(e) => {
+                                                if(e.key == "ENTER") {
+                                                    setIdPedido(pedido.id)
+                                                    e.target.parentNode.parentNode.parentNode.parentNode.parentNode.classList.add('editar')
+                                                    e.currentTarget.parentNode.parentNode.previousSibling.focus();
+                                                }
+                                            }
+                                                
+                                            } onClick={(e)=> {
                                                 setIdPedido(pedido.id)
-                                                e.target.parentNode.parentNode.parentNode.parentNode.parentNode.classList.add('editar')
+                                                e.currentTarget.parentNode.parentNode.parentNode.classList.add('editar')
+                                                e.currentTarget.parentNode.parentNode.previousSibling.focus();
                                             }}
+                                            tabIndex="1"
                                             aria-label="Editar produto">
                                                 <Image src='/edit.png' alt="lápis e prancheta" width="20" height="20"/>
                                             </button>
@@ -305,16 +315,23 @@ export default function Pedidos (){
                             ref={register}
                             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="entrega" type="number" step="0.01"/>
                             </div>
-                            <div className="w-full md:w-1/2 px-3">
-                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="endereco">
-                                CEP
-                            </label>
-                            <input 
-                            name='entrega.cep'
-                            required
-                            onChange={(e) => verificaCep(e.target.value)}
-                            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="endereco" type="text"/>
-                            {showError && <p className="text-red-500">Cep não encontrado. <br /> Insira manualmente o endereco.</p>}
+                            <div className="w-full md:w-1/2 px-3 flex items-end gap-2">
+                                <div className="w-3/4">
+                                    <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="endereco" aria-label="Digite um cep para buscar o endereço">
+                                        CEP
+                                    </label>
+                                    <input 
+                                    name='entrega.cep'
+                                    required
+                                    onChange={(e) => setCep(e.target.value)}
+                                    className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="endereco" type="text"/>
+                                    {showError && <p className="text-red-500">Cep não encontrado. <br /> Insira manualmente o endereco.</p>}
+                                </div>
+                                <div className="w-1/4">
+                                    <button type="button" aria-label="pesquisar cep" onClick={verificaCep}>
+                                        <Image src='/lupa.png' alt="lupa" width="20" height="20"/>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div className="flex flex-wrap -mx-3 mb-2">
