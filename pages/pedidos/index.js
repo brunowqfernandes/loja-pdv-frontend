@@ -323,6 +323,7 @@ export default function Pedidos (){
                                     <input 
                                     name='entrega.cep'
                                     required
+                                    maxlength="8"
                                     onChange={(e) => setCep(e.target.value)}
                                     className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="endereco" type="text"/>
                                     {showError && <p className="text-red-500">Cep não encontrado. <br /> Insira manualmente o endereco.</p>}
