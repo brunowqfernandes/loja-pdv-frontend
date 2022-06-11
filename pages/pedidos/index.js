@@ -53,26 +53,22 @@ export default function Pedidos (){
     }, [user])
 
     async function verificaCep() {
-     if (cep.length == 8) {
-        setShowError(false)
-        document.querySelector('[name="entrega.cep"]').disabled = false;
-        const {data} = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
-        if(data.erro) {
-            setShowError(true);
-            document.querySelector('[name="entrega.endereco"]').disabled = false;
-            document.querySelector('[name="entrega.bairro"]').disabled = false;
-            document.querySelector('[name="entrega.cep"]').disabled = false;
-            return
+        if (cep.length == 8) {
+            setShowError(false)
+            const {data} = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+            if(data.erro) {
+                setShowError(true);
+                return
+            }
+            console.log(data);
+            document.querySelector('[name="entrega.endereco"]').value = data.logradouro;
+            document.querySelector('[name="entrega.cep"]').value = data.cep;
+            document.querySelector('[name="entrega.bairro"]').value = data.bairro;
         }
-        console.log(data);
-        document.querySelector('[name="entrega.endereco"]').value = data.logradouro;
-        document.querySelector('[name="entrega.cep"]').value = data.cep;
-        document.querySelector('[name="entrega.bairro"]').value = data.bairro;
-        document.querySelector('[name="entrega.cep"]').disabled = false;
-     }
     }
 
     async function handlePedido(data, e){
+        console.log(data)
         const itensPedido = []
         e.target.querySelectorAll('.select-produtos input').forEach(el => {
             if(Number(el.value.length) > 0){
@@ -89,8 +85,10 @@ export default function Pedidos (){
         if(!itensPedido.length){
             alert('É preciso selecionar ao menos um produto')
             return
-        }
+        }        
+        const endereco = `${data.entrega.endereco}, ${data.entrega.num} - ${data.entrega.bairro} - ${data.entrega.cep}`
         data.itensPedido = itensPedido
+        data.entrega.endereco = endereco
         console.log(data)
         const response = await api.post('/pedidos', data)        
         console.log(response.data)
@@ -259,11 +257,12 @@ export default function Pedidos (){
                             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" >
                                 Produtos
                             </label>
+                            <p><strong>Obs.:</strong>Para adicionar um produto ao pedido, basta aumentar a sua quantidade</p>
                                 <div className="select-produtos w-full text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight">
                                     {produtos.map((produto)=>{
                                         return(
                                             produto.quantidade > 0 && (
-                                                <div className="flex items-center justify-between font-bold" data-produto={produto.id} key={produto.id}>{produto.nome} (Disponível: {produto.quantidade})<input type="number" max={produto.quantidade} step="1" className="appearance-none w-3/12 bg-white-200 text-gray-700 border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none " /></div>
+                                                <div className="flex items-center justify-between font-bold" data-produto={produto.id} key={produto.id}>{produto.nome} (Disponível: {produto.quantidade})<input type="number" max={produto.quantidade} step="1" className="appearance-none w-3/12 bg-white-200 text-gray-700 border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none " aria-label={`${produto.nome}, quantidade disponível: ${produto.quantidade}`}/></div>
                                             )
                                         )
                                     })}
@@ -323,6 +322,7 @@ export default function Pedidos (){
                                     <input 
                                     name='entrega.cep'
                                     required
+                                    ref={register}
                                     maxlength="8"
                                     onChange={(e) => setCep(e.target.value)}
                                     className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="endereco" type="text"/>
@@ -343,7 +343,7 @@ export default function Pedidos (){
                             <input 
                             name='entrega.endereco'
                             required
-                            disabled
+                            
                             ref={register}
                             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="endereco" type="text"/>
                             </div>
@@ -366,7 +366,7 @@ export default function Pedidos (){
                             <input 
                             name='entrega.bairro'
                             required
-                            disabled
+                            
                             ref={register}
                             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="endereco" type="text"/>
                             </div>
