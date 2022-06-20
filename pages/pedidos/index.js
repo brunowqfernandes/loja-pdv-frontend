@@ -144,7 +144,7 @@ export default function Pedidos (){
                                 <th className="px-4 py-3">Forma de pagamento</th>
                                 <th className="px-4 py-3">Tipo de Entrega</th>
                                 <th className="px-4 py-3">Valor da entrega</th>
-                                <th className="px-4 py-3" aria-label="Emdereço de entrega">End. Entrega</th>
+                                <th className="px-4 py-3" aria-label="Endereço de entrega">End. Entrega</th>
                                 <th className="px-4 py-3">Status</th>
                                 <th className="px-4 py-3">Ações</th>
                             </tr>
@@ -249,7 +249,7 @@ export default function Pedidos (){
                             <input 
                             name='entrega.nomeCliente'
                             ref={register}
-                            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="cliente" type="text"/>
+                            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="cliente" type="text" aria-label="Digitie o nome do cliente"/>
                             </div>                            
                         </div>
                         <div className="flex flex-wrap -mx-3 mb-6">
@@ -271,14 +271,14 @@ export default function Pedidos (){
                         </div>
                         <div className="flex flex-wrap -mx-3 mb-6">                            
                             <div className="w-full md:w-1/2 px-3">
-                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="pagament">
+                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="pagament" >
                                 Forma de pagamento
                             </label>
                             <select 
                             name='formaPagamento'
                             ref={register}
                             required
-                            className="block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="pagament" type="text">
+                            className="block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="pagament" type="text" aria-label="Selecione a forma de pagamento do pedido">
                                 <option value="" selected hidden>SELECIONE</option>
                                 <option value="DINHEIRO">DINHEIRO</option>    
                                 <option value="DEBITO">DEBITO</option>    
@@ -294,7 +294,7 @@ export default function Pedidos (){
                             name='entrega.tipoEntrega'
                             required
                             ref={register}
-                            className="block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-last-name" type="text">
+                            className="block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-last-name" type="text" aria-label="Selecione o tipo de entrega do pedido">
                                 <option value="" selected hidden>SELECIONE</option>
                                 <option value="METRO">METRO</option>
                                 <option value="RETIRADA">RETIRADA</option>
@@ -312,7 +312,7 @@ export default function Pedidos (){
                             name='entrega.valorEntrega'
                             required
                             ref={register}
-                            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="entrega" type="number" step="0.01"/>
+                            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="entrega" type="number" step="0.01" aria-label="Digite o valor da entrega"/>
                             </div>
                             <div className="w-full md:w-1/2 px-3 flex items-end gap-2">
                                 <div className="w-3/4">
@@ -357,7 +357,7 @@ export default function Pedidos (){
                             name='entrega.num'
                             required
                             ref={register}
-                            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="endereco" type="text"/>
+                            className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="endereco" type="text" aria-label="Digite o número do endereço"/>
                             </div>
                             <div className="w-full md:w-8/12 px-3 mb-6 md:mb-0">
                             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="endereco">
@@ -380,7 +380,7 @@ export default function Pedidos (){
                             name="statusPedido" 
                             ref={register}
                             required
-                            className="block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="status" type="text">
+                            className="block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="status" type="text" aria-label="Selecione o estado atual do pedido">
                                 <option value="" selected hidden>SELECIONE</option>
                                 <option value="AGUARDANDO_ESTOQUE">AGUARDANDO ESTOQUE</option>
                                 <option value="REALIZADO">REALIZADO</option>
@@ -390,7 +390,7 @@ export default function Pedidos (){
                             </div>                            
                         </div>
                         <div className="text-center my-3">
-                            <button className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
+                            <button className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded" aria-label="Clique para salvar o pedido">
                                 Salvar
                             </button>
                         </div>
