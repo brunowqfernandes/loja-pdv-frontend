@@ -393,7 +393,7 @@ export default function Pedidos (){
                             <button className="bg-blue-500 shadow hover:bg-blue-400 text-white font-bold py-2 px-4 border-blue-700 hover:border-blue-500 rounded" aria-label="Clique para salvar o pedido">
                                 Salvar
                             </button>
-                            <button type="button" className="mr-2 hover:bg-blue-400 font-bold py-2 px-4 shadow border-blue-700 hover:text-white rounded" aria-label="Clique para descartar as informações" onClick={(e) => {setShowModal(false)}}>
+                            <button type="button" className="ml-2 hover:bg-blue-400 font-bold py-2 px-4 shadow border-blue-700 hover:text-white rounded" aria-label="Clique para descartar as informações" onClick={(e) => {setShowModal(false)}}>
                                 Cancelar
                             </button>
                         </div>
