@@ -246,7 +246,8 @@ export default function Pedidos (){
                             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="cliente">
                                 Nome do cliente
                             </label>
-                            <input 
+                            <input
+                            tabIndex="0"
                             name='entrega.nomeCliente'
                             ref={register}
                             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="cliente" type="text" aria-label="Digitie o nome do cliente"/>
@@ -257,7 +258,7 @@ export default function Pedidos (){
                             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" >
                                 Produtos
                             </label>
-                            <p><strong>Obs.:</strong>Para adicionar um produto ao pedido, basta aumentar a sua quantidade</p>
+                            <p tabIndex="0"><strong>Obs.:</strong>Para adicionar um produto ao pedido, basta aumentar a sua quantidade</p>
                                 <div className="select-produtos w-full text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight">
                                     {produtos.map((produto)=>{
                                         return(
