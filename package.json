@@ -11,6 +11,7 @@
   "dependencies": {
     "@hookform/resolvers": "^2.6.1",
     "axios": "^0.23.0",
+    "classnames": "^2.3.2",
     "dateformat": "^5.0.2",
     "http-proxy-middleware": "^2.0.1",
     "next": "11.1.2",

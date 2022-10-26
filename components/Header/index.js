@@ -4,9 +4,11 @@ import { useForm } from 'react-hook-form';
 import { AuthContext } from '../../contexts/AuthContext'
 import { Modal } from '../../components/Modal';
 import { api } from '../../services/api';
+import classNames from 'classnames';
 
 export function Header () {
     const { user, signOut } = useContext(AuthContext)
+    const [showMenu, setMenuOpen] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const { register, handleSubmit } = useForm({
         defaultValues: {
@@ -30,23 +32,27 @@ export function Header () {
 
     return(
         <>
-        <header className="text-gray-600 body-font">
-            <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-            <a href="#" className="bg-black text-white font-bold text-xl p-4">Logo</a>
-                <nav className="md:mr-auto md:ml-4 md:py-1 md:pl-4 md:border-l md:border-gray-400	flex flex-wrap items-center text-base justify-center">
+        <header className="text-gray-600 body-font relative">
+            <div className="container mx-auto flex flex-wrap justify-between md:justify-start p-5 items-center">
+                <a href="#" className="bg-black text-white font-bold text-xl p-4">Logo</a>
+                <button className='md:hidden font-bold bg-black text-white block p-4' onClick={()=>setMenuOpen(!showMenu)}>MENU</button>
+                <nav className={classNames({                    
+                    'hidden': !showMenu,
+                    'flex-col w-1/3 bg-black text-white p-2 absolute top-24 right-2': showMenu
+                },'md:mr-auto md:ml-4 md:py-1 md:pl-4 md:border-l md:border-gray-400 md:flex flex-wrap items-center text-base justify-center')}>
                     <Link href="/produtos">
-                        <a className="mr-5 hover:text-gray-900">Produtos</a>
+                        <a className="block mr-5 hover:text-gray-900">Produtos</a>
                     </Link>
                     <Link href="/pedidos">
-                        <a className="mr-5 hover:text-gray-900">Pedidos</a>
+                        <a className="block mr-5 hover:text-gray-900">Pedidos</a>
                     </Link>
                     {user?.admin && (
                         <>
                             <Link href="/relatorios">
-                                <a className="mr-5 hover:text-gray-900">Relatórios</a>
+                                <a className="block mr-5 hover:text-gray-900">Relatórios</a>
                             </Link>
                             <button onClick={() => setShowModal(true)}>
-                                <a className="mr-5 hover:text-gray-900">Novo Usuário</a>
+                                <a className="block mr-5 hover:text-gray-900">Novo Usuário</a>
                             </button>
                         </>
                     )}

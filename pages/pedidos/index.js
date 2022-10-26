@@ -122,7 +122,7 @@ export default function Pedidos (){
 
 
     return(
-        <div className="flex flex-col h-screen" aria-live="polite">
+        <div className="flex flex-col h-screen overflow-hidden" aria-live="polite">
             <Header/>
             <div className="flex flex-col flex-grow justify-center items-center" role="main">
                 <h1 className="text-5xl text-gray-900 leading-none flex items-center pb-4 mb-4 border-b border-gray-200">Pedidos</h1>
@@ -133,103 +133,105 @@ export default function Pedidos (){
                         <button className="bg-gray-600 hover:bg-gray-700 text-white text-sm px-4 py-2 border rounded-full absolute top-full left-full -translate-x-1/2 transform -translate-y-1/2" onClick={() => setShowModal(true)} aria-label="Adicionar novo pedido">
                             +
                         </button>
-                        <table className="w-full text-center">
-                            <thead>
-                            <tr className="text-md font-semibold tracking-wide  text-gray-900 bg-gray-100 uppercase  border-gray-600">
-                                <th className="px-4 py-3">N°</th>
-                                <th className="px-4 py-3">Data do Pedido</th>
-                                <th className="px-4 py-3">Produtos</th>
-                                <th className="px-4 py-3">Total</th>
-                                <th className="px-4 py-3">Cliente</th>
-                                <th className="px-4 py-3">Forma de pagamento</th>
-                                <th className="px-4 py-3">Tipo de Entrega</th>
-                                <th className="px-4 py-3">Valor da entrega</th>
-                                <th className="px-4 py-3" aria-label="Endereço de entrega">End. Entrega</th>
-                                <th className="px-4 py-3">Status</th>
-                                <th className="px-4 py-3">Ações</th>
-                            </tr>
-                            </thead>
-                            <tbody className="bg-white">
-                            { pedidos.sort((a,b)=>a.id-b.id).map((pedido) => {
-                                return (
-                                    <tr className="text-gray-700" key={pedido.id}>
-                                        <td className="px-4 py-3 border">
-                                        <div className="flex items-center justify-center text-sm">
-                                            <div>
-                                            <p className="text-black">{pedido.id}</p>
+                        <div className="w-full overflow-y-auto">
+                            <table className="w-full text-center">
+                                <thead>
+                                <tr className="text-md font-semibold tracking-wide  text-gray-900 bg-gray-100 uppercase  border-gray-600">
+                                    <th className="px-4 py-3">N°</th>
+                                    <th className="px-4 py-3">Data do Pedido</th>
+                                    <th className="px-4 py-3">Produtos</th>
+                                    <th className="px-4 py-3">Total</th>
+                                    <th className="px-4 py-3">Cliente</th>
+                                    <th className="px-4 py-3">Forma de pagamento</th>
+                                    <th className="px-4 py-3">Tipo de Entrega</th>
+                                    <th className="px-4 py-3">Valor da entrega</th>
+                                    <th className="px-4 py-3" aria-label="Endereço de entrega">End. Entrega</th>
+                                    <th className="px-4 py-3">Status</th>
+                                    <th className="px-4 py-3">Ações</th>
+                                </tr>
+                                </thead>
+                                <tbody className="bg-white">
+                                { pedidos.sort((a,b)=>a.id-b.id).map((pedido) => {
+                                    return (
+                                        <tr className="text-gray-700" key={pedido.id}>
+                                            <td className="px-4 py-3 border">
+                                            <div className="flex items-center justify-center text-sm">
+                                                <div>
+                                                <p className="text-black">{pedido.id}</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        </td>
-                                        <td className="px-4 py-3 border">{dateFormat(pedido.dataPedido, 'dd/mm/yyyy')}</td>
-                                        <td className="px-4 py-3 text-sm border">
-                                            <ul>
-                                            { pedido.itensPedido?.map((item,index) =>{
-                                                return(
-                                                    <li key={index}>{`${item.produto.nome} (${item.quantidade})`}</li>    
-                                                )
-                                            })}
-                                            </ul>
-                                        </td>
-                                        <td className="px-4 py-3 text-sm border">{Number(pedido.valorTotal ).toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' })}</td>
-                                        <td className="px-4 py-3 text-sm border">{pedido.entrega.nomeCliente}</td>
-                                        <td className="px-4 py-3 text-sm border">{pedido.formaPagamento}</td>
-                                        <td className="px-4 py-3 text-sm border">{pedido.entrega.tipoEntrega}</td>
-                                        <td className="px-4 py-3 text-sm border">{Number(pedido.entrega.valorEntrega).toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' })}</td>
-                                        <td className="px-4 py-3 text-sm border">{pedido.entrega.endereco}</td>
-                                        <td className="px-4 py-3 text-sm border">
-                                            <div className="info">
-                                                <span className="px-2 py-1 font-semibold leading-tight text-gray-700 rounded-sm">{pedido.statusPedido}</span>
-                                            </div>
-                                            <div className="input">
-                                            <select 
-                                            name="statusPedido"
-                                            onChange={e => setStatusPedido(e.target.value)}
-                                            className="block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="status" type="text">
-                                                <option value="AGUARDANDO_ESTOQUE">AGUARDANDO ESTOQUE</option>
-                                                <option value="REALIZADO">REALIZADO</option>
-                                                <option value="ENTREGUE">ENTREGUE</option>
-                                                <option value="CANCELADO">CANCELADO</option>
-                                            </select>
-                                            <input id={`submit${pedido.id}`} type="submit" hidden />
-                                            </div>
-                                        </td>
-                                        <td className="px-4 py-3 text-xs  border">
-                                            <div className="info">
-                                            <button onKeyUp={(e) => {
-                                                if(e.key == "ENTER") {
-                                                    setIdPedido(pedido.id)
-                                                    e.target.parentNode.parentNode.parentNode.parentNode.parentNode.classList.add('editar')
-                                                    e.currentTarget.parentNode.parentNode.previousSibling.focus();
+                                            </td>
+                                            <td className="px-4 py-3 border">{dateFormat(pedido.dataPedido, 'dd/mm/yyyy')}</td>
+                                            <td className="px-4 py-3 text-sm border">
+                                                <ul>
+                                                { pedido.itensPedido?.map((item,index) =>{
+                                                    return(
+                                                        <li key={index}>{`${item.produto.nome} (${item.quantidade})`}</li>    
+                                                    )
+                                                })}
+                                                </ul>
+                                            </td>
+                                            <td className="px-4 py-3 text-sm border">{Number(pedido.valorTotal ).toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' })}</td>
+                                            <td className="px-4 py-3 text-sm border">{pedido.entrega.nomeCliente}</td>
+                                            <td className="px-4 py-3 text-sm border">{pedido.formaPagamento}</td>
+                                            <td className="px-4 py-3 text-sm border">{pedido.entrega.tipoEntrega}</td>
+                                            <td className="px-4 py-3 text-sm border">{Number(pedido.entrega.valorEntrega).toLocaleString("pt-BR", { minimumFractionDigits: 2 , style: 'currency', currency: 'BRL' })}</td>
+                                            <td className="px-4 py-3 text-sm border">{pedido.entrega.endereco}</td>
+                                            <td className="px-4 py-3 text-sm border">
+                                                <div className="info">
+                                                    <span className="px-2 py-1 font-semibold leading-tight text-gray-700 rounded-sm">{pedido.statusPedido}</span>
+                                                </div>
+                                                <div className="input">
+                                                <select 
+                                                name="statusPedido"
+                                                onChange={e => setStatusPedido(e.target.value)}
+                                                className="block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="status" type="text">
+                                                    <option value="AGUARDANDO_ESTOQUE">AGUARDANDO ESTOQUE</option>
+                                                    <option value="REALIZADO">REALIZADO</option>
+                                                    <option value="ENTREGUE">ENTREGUE</option>
+                                                    <option value="CANCELADO">CANCELADO</option>
+                                                </select>
+                                                <input id={`submit${pedido.id}`} type="submit" hidden />
+                                                </div>
+                                            </td>
+                                            <td className="px-4 py-3 text-xs  border">
+                                                <div className="info">
+                                                <button onKeyUp={(e) => {
+                                                    if(e.key == "ENTER") {
+                                                        setIdPedido(pedido.id)
+                                                        e.target.parentNode.parentNode.parentNode.parentNode.parentNode.classList.add('editar')
+                                                        e.currentTarget.parentNode.parentNode.previousSibling.focus();
+                                                    }
                                                 }
-                                            }
-                                                
-                                            } onClick={(e)=> {
-                                                setIdPedido(pedido.id)
-                                                e.currentTarget.parentNode.parentNode.parentNode.classList.add('editar')
-                                                e.currentTarget.parentNode.parentNode.previousSibling.focus();
-                                            }}
-                                            tabIndex="1"
-                                            aria-label="Editar produto">
-                                                <Image src='/edit.png' alt="lápis e prancheta" width="20" height="20"/>
-                                            </button>
-                                            {/* <button onClick={() => {
-                                                setIdProduto(produto.id)
-                                                setProdutoExcluir(produto.nome)
-                                                setShowDeleteModal(true)
-                                                
-                                            }}aria-label="deletar produto">
-                                                <Image src='/delete.png' alt="lixeira" width="15" height="15"/>
-                                            </button> */}
-                                            </div>
-                                            <div className="input">
-                                            <button onClick={handleUpdatePedido } className="block w-full bg-gray-700 p-1 text-white cursor-pointer">Salvar</button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                            </tbody>
-                        </table>
+                                                    
+                                                } onClick={(e)=> {
+                                                    setIdPedido(pedido.id)
+                                                    e.currentTarget.parentNode.parentNode.parentNode.classList.add('editar')
+                                                    e.currentTarget.parentNode.parentNode.previousSibling.focus();
+                                                }}
+                                                tabIndex="1"
+                                                aria-label="Editar produto">
+                                                    <Image src='/edit.png' alt="lápis e prancheta" width="20" height="20"/>
+                                                </button>
+                                                {/* <button onClick={() => {
+                                                    setIdProduto(produto.id)
+                                                    setProdutoExcluir(produto.nome)
+                                                    setShowDeleteModal(true)
+                                                    
+                                                }}aria-label="deletar produto">
+                                                    <Image src='/delete.png' alt="lixeira" width="15" height="15"/>
+                                                </button> */}
+                                                </div>
+                                                <div className="input">
+                                                <button onClick={handleUpdatePedido } className="block w-full bg-gray-700 p-1 text-white cursor-pointer">Salvar</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
+                                </tbody>
+                            </table>
+                        </div>
                         
                         </div>
                     </div>
