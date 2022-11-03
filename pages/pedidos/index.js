@@ -122,7 +122,7 @@ export default function Pedidos (){
 
 
     return(
-        <div className="flex flex-col h-screen overflow-hidden" aria-live="polite">
+        <div className="flex flex-col h-screen overflow-x-hidden" aria-live="polite">
             <Header/>
             <div className="flex flex-col flex-grow justify-center items-center" role="main">
                 <h1 className="text-5xl text-gray-900 leading-none flex items-center pb-4 mb-4 border-b border-gray-200">Pedidos</h1>
@@ -133,7 +133,7 @@ export default function Pedidos (){
                         <button className="bg-gray-600 hover:bg-gray-700 text-white text-sm px-4 py-2 border rounded-full absolute top-full left-full -translate-x-1/2 transform -translate-y-1/2" onClick={() => setShowModal(true)} aria-label="Adicionar novo pedido">
                             +
                         </button>
-                        <div className="w-full overflow-y-auto">
+                        <div className="w-full h-96 sm:h-auto overflow-x-auto">
                             <table className="w-full text-center">
                                 <thead>
                                 <tr className="text-md font-semibold tracking-wide  text-gray-900 bg-gray-100 uppercase  border-gray-600">

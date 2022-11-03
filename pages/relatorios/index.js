@@ -44,7 +44,7 @@ export default function Relatorios (){
     }
 
     return(
-        <div className="flex flex-col h-screen overflow-hidden">
+        <div className="flex flex-col h-screen overflow-x-hidden">
             <Header/>
             <div className="flex flex-col flex-grow justify-center items-center">
                 <h1 className="text-5xl text-gray-900 leading-none flex items-center pb-4 mb-4 border-b border-gray-200">Relatórios</h1>
@@ -54,7 +54,7 @@ export default function Relatorios (){
                 <section className="container mx-auto p-6 font-mono">
                     <div className="w-full mx-auto mb-8 rounded-lg shadow-lg">
                         <div className="w-full relative">
-                        <div className="w-full overflow-y-auto">
+                        <div className="w-full max-h-96 sm:h-auto overflow-y-auto">
                             <table className="w-full text-center">
                                 <thead>
                                 <tr className="text-md font-semibold tracking-wide  text-gray-900 bg-gray-100 uppercase  border-gray-600">

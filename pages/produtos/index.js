@@ -78,17 +78,17 @@ export default function Produtos (){
     
 
     return(
-        <div className="flex flex-col h-screen overflow-hidden">
+        <div className="flex flex-col h-screen overflow-x-hidden">
             <Header/>
             <div className="flex flex-col flex-grow justify-center items-center">
                 <h1 className="text-5xl text-gray-900 leading-none flex items-center pb-4 mb-4 border-b border-gray-200">Produtos</h1>
                 <section className="container mx-auto p-6 font-mono">
-                    <div className="w-3/4 mx-auto mb-8 rounded-lg shadow-lg">
+                    <div className="w-full mx-auto mb-8 rounded-lg shadow-lg">
                         <div className="w-full relative">
                             <button className="bg-gray-600 hover:bg-gray-700 text-white text-sm px-4 py-2 border rounded-full absolute top-full left-full -translate-x-1/2 transform -translate-y-1/2" onClick={() => setShowModal(true)} aria-label="adicionar um produto">
                                 +
                             </button>
-                            <div className='w-full overflow-x-auto'>
+                            <div className='w-full overflow-auto'>
                                 <table className="w-full text-center">
                                     <thead>
                                     <tr className="text-md font-semibold tracking-wide  text-gray-900 bg-gray-100 uppercase border-b border-gray-600">
@@ -193,7 +193,7 @@ export default function Produtos (){
                             className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-last-name" type="text"/>
                             
                             </div>
-                            <div>
+                            <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="preco">
                                 Valor
                             </label>
