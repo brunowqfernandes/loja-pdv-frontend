@@ -38,7 +38,7 @@ export function Header () {
                 <button className='md:hidden font-bold bg-black text-white block p-4' onClick={()=>setMenuOpen(!showMenu)}>MENU</button>
                 <nav className={classNames({                    
                     'hidden': !showMenu,
-                    'flex-col w-1/3 bg-black text-white p-2 absolute top-24 right-2': showMenu
+                    'flex-col w-1/3 bg-black text-white p-2 absolute top-24 right-2 z-20': showMenu
                 },'md:mr-auto md:ml-4 md:py-1 md:pl-4 md:border-l md:border-gray-400 md:flex flex-wrap items-center text-base justify-center')}>
                     <Link href="/produtos">
                         <a className="block mr-5 hover:text-gray-900">Produtos</a>
